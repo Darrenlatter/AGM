@@ -8,21 +8,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Official UK Scout Brand Colors */
-      --scout-purple: #7413dc;
-      --deep-purple: #511482;
-      --scout-teal: #00a794;
-      --scout-green: #23a950;
+      /* Official Scouts Navy Explorers Branding */
+      --scout-navy: #003982;
+      --deep-navy: #002353;
       --white: #ffffff;
-      --off-white: #f3f4f6;
-      --muted: #cbd5e1;
+      --off-white: #f4f6f9;
+      --muted: #94a3b8;
       --slide-radius: 6px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--scout-purple);
+      background: var(--scout-navy);
       color: var(--white);
       font-family: 'Barlow', sans-serif;
       height: 100dvh;
@@ -38,16 +36,16 @@
       align-items: center;
       gap: 18px;
       padding: 14px 28px;
-      background: var(--deep-purple);
-      border-bottom: 3px solid var(--scout-teal);
+      background: var(--deep-navy);
+      border-bottom: 3px solid var(--white);
       flex-shrink: 0;
       position: relative;
       z-index: 10;
     }
 
     .badge {
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -77,7 +75,8 @@
       margin-left: auto;
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1.6rem;
-      color: var(--scout-teal);
+      color: var(--white);
+      opacity: 0.8;
       letter-spacing: 0.06em;
       white-space: nowrap;
     }
@@ -87,7 +86,7 @@
       flex: 1;
       position: relative;
       overflow: hidden;
-      background: #3e0b78; /* Slightly deeper visual anchor for the slides area */
+      background: #001a3d;
     }
 
     /* ── Slides ──────────────────────────────────── */
@@ -120,7 +119,7 @@
       max-width: 100%;
       object-fit: contain;
       border-radius: var(--slide-radius);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
       display: block;
     }
 
@@ -130,7 +129,7 @@
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      background: linear-gradient(transparent, rgba(62,11,120,0.95) 50%);
+      background: linear-gradient(transparent, rgba(0,26,61,0.95) 50%);
       width: 100%;
       max-width: 900px;
       padding: 50px 32px 20px;
@@ -165,7 +164,7 @@
       letter-spacing: 0.04em;
       color: var(--white);
       line-height: 0.95;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
     .slide-title .sub {
@@ -180,16 +179,17 @@
     .slide-title .rule {
       width: 80px;
       height: 3px;
-      background: var(--scout-teal);
+      background: var(--white);
       margin: 24px auto;
       border-radius: 2px;
+      opacity: 0.7;
     }
 
     .slide-title .detail {
       font-size: clamp(1.4rem, 4vw, 2.4rem);
       font-family: 'Bebas Neue', sans-serif;
       letter-spacing: 0.08em;
-      color: var(--scout-teal);
+      color: var(--white);
     }
 
     /* Placeholder slide */
@@ -201,7 +201,7 @@
       border: 2px dashed rgba(255,255,255,0.2);
       margin: 40px;
       border-radius: var(--slide-radius);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.02);
     }
 
     .slide-placeholder .icon {
@@ -231,13 +231,13 @@
       justify-content: center;
       gap: 16px;
       padding: 14px 20px;
-      background: var(--deep-purple);
+      background: var(--deep-navy);
       border-top: 1px solid rgba(255,255,255,0.1);
     }
 
     .btn {
       background: transparent;
-      border: 2px solid var(--scout-teal);
+      border: 2px solid var(--white);
       color: var(--white);
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1.2rem;
@@ -246,11 +246,13 @@
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.2s, border-color 0.2s, color 0.2s;
+      opacity: 0.8;
     }
 
     .btn:hover {
-      background: var(--scout-teal);
-      color: var(--white);
+      background: var(--white);
+      color: var(--scout-navy);
+      opacity: 1;
     }
 
     .btn-icon {
@@ -259,15 +261,16 @@
     }
 
     .play-pause {
-      background: var(--scout-green);
-      color: var(--white);
-      border-color: var(--scout-green);
+      background: var(--white);
+      color: var(--scout-navy);
+      border-color: var(--white);
+      opacity: 1;
     }
 
     .play-pause:hover {
-      background: #2ec15d;
-      border-color: #2ec15d;
-      color: var(--white);
+      background: var(--off-white);
+      border-color: var(--off-white);
+      color: var(--scout-navy);
     }
 
     /* progress dots */
@@ -291,7 +294,7 @@
     }
 
     .dot.active {
-      background: var(--scout-teal);
+      background: var(--white);
       transform: scale(1.4);
     }
 
@@ -301,7 +304,7 @@
       bottom: 0;
       left: 0;
       height: 3px;
-      background: var(--scout-teal);
+      background: var(--white);
       width: 0%;
       transition: width linear;
       z-index: 20;
@@ -324,7 +327,7 @@
     .drop-zone {
       position: absolute;
       inset: 0;
-      background: rgba(81,20,130,0.96);
+      background: rgba(0,35,83,0.96);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -442,10 +445,10 @@
 <script>
   // ── State ────────────────────────────────────────
   const slides = [
-    { type: 'title' } // the opening title card
+    { type: 'title' } 
   ];
 
-  // Placeholder slides (replace with real photo objects later)
+  // Placeholder slides
   const placeholders = [
     { caption: 'Opening Ceremony',   hint: 'Drop a photo here or use + Add Photos' },
     { caption: 'Scout Activities',   hint: 'Drop a photo here or use + Add Photos' },
@@ -455,15 +458,13 @@
 
   placeholders.forEach(p => slides.push({ type: 'placeholder', ...p }));
 
-  // Closing slide
   slides.push({ type: 'end' });
 
   let current = 0;
   let playing = false;
   let timer = null;
-  const AUTO_DURATION = 5000; // ms per slide
+  const AUTO_DURATION = 5000; 
 
-  // ── DOM refs ─────────────────────────────────────
   const stage      = document.getElementById('stage');
   const dotsEl     = document.getElementById('dots');
   const counter    = document.getElementById('slideCounter');
@@ -474,11 +475,10 @@
 
   // ── Render slides ────────────────────────────────
   function buildSlides() {
-    // Remove all slides except the first built one (index 0 = title, always in HTML)
     stage.querySelectorAll('.slide:not(#slide-0)').forEach(el => el.remove());
 
     slides.forEach((s, i) => {
-      if (i === 0) return; // title already in HTML
+      if (i === 0) return; 
 
       const el = document.createElement('div');
       el.id = `slide-${i}`;
@@ -486,8 +486,9 @@
 
       if (s.type === 'photo') {
         el.classList.add('slide-photo');
+        // Only inject layout if caption text is purposefully added manually later
         el.innerHTML = `
-          <img src="${s.src}" alt="${s.caption || ''}">
+          <img src="${s.src}" alt="">
           ${s.caption ? `<div class="caption"><h2>${s.caption}</h2>${s.subcaption ? `<p>${s.subcaption}</p>` : ''}</div>` : ''}
         `;
       } else if (s.type === 'placeholder') {
@@ -530,7 +531,7 @@
     counter.textContent = `${current + 1} / ${slides.length}`;
   }
 
-  function goTo(idx, direction) {
+  function goTo(idx) {
     if (idx < 0 || idx >= slides.length) return;
 
     const prev = document.getElementById(`slide-${current}`);
@@ -538,9 +539,7 @@
 
     if (prev) prev.classList.remove('active');
     current = idx;
-    if (next) {
-      next.classList.add('active');
-    }
+    if (next) next.classList.add('active');
 
     dotsEl.querySelectorAll('.dot').forEach((d, i) => {
       d.classList.toggle('active', i === current);
@@ -555,7 +554,6 @@
     goTo(next);
   }
 
-  // ── Autoplay ─────────────────────────────────────
   function startProgress() {
     progressBar.style.transition = 'none';
     progressBar.style.width = '0%';
@@ -589,7 +587,6 @@
     }
   }
 
-  // ── Keyboard ─────────────────────────────────────
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { changeSlide(1); }
     if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { changeSlide(-1); }
@@ -597,7 +594,6 @@
     if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
   });
 
-  // ── Fullscreen ───────────────────────────────────
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -606,7 +602,6 @@
     }
   }
 
-  // ── Drag & Drop photos ───────────────────────────
   stage.addEventListener('dragover', e => {
     e.preventDefault();
     dropZone.classList.add('visible');
@@ -631,13 +626,10 @@
     const imgs = files.filter(f => f.type.startsWith('image/'));
     if (!imgs.length) return;
 
-    const endIdx = slides.findIndex(s => s.type === 'end');
-    const phCount = slides.filter(s => s.type === 'placeholder').length;
-
-    imgs.forEach((file, fi) => {
+    imgs.forEach((file) => {
       const url = URL.createObjectURL(file);
-      const name = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
-      const newSlide = { type: 'photo', src: url, caption: name };
+      // Explicitly set caption to empty string to prevent filename display on screen
+      const newSlide = { type: 'photo', src: url, caption: '' };
 
       const firstPH = slides.findIndex(s => s.type === 'placeholder');
       if (firstPH !== -1) {
@@ -652,7 +644,6 @@
     goTo(current);
   }
 
-  // ── Touch / swipe ─────────────────────────────────
   let touchStartX = 0;
   stage.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
   stage.addEventListener('touchend', e => {
@@ -660,7 +651,6 @@
     if (Math.abs(dx) > 40) changeSlide(dx < 0 ? 1 : -1);
   });
 
-  // ── Init ─────────────────────────────────────────
   buildSlides();
   goTo(0);
 </script>
