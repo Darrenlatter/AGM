@@ -443,22 +443,17 @@
 <input type="file" id="fileInput" accept="image/*" multiple>
 
 <script>
-  // ── State ────────────────────────────────────────
+  // ── GitHub Pages Image Configuration ─────────────────────────
+  // To use your own static images, create a folder named "images" 
+  // right next to this file in GitHub and match the filenames below.
   const slides = [
-    { type: 'title' } 
+    { type: 'title' },
+    { type: 'photo', src: 'images/opening.jpg', caption: '' },
+    { type: 'photo', src: 'images/activities.jpg', caption: '' },
+    { type: 'photo', src: 'images/awards.jpg', caption: '' },
+    { type: 'photo', src: 'images/group.jpg', caption: '' },
+    { type: 'end' }
   ];
-
-  // Placeholder slides
-  const placeholders = [
-    { caption: 'Opening Ceremony',   hint: 'Drop a photo here or use + Add Photos' },
-    { caption: 'Scout Activities',   hint: 'Drop a photo here or use + Add Photos' },
-    { caption: 'Awards & Badges',    hint: 'Drop a photo here or use + Add Photos' },
-    { caption: 'Group Photo',        hint: 'Drop a photo here or use + Add Photos' },
-  ];
-
-  placeholders.forEach(p => slides.push({ type: 'placeholder', ...p }));
-
-  slides.push({ type: 'end' });
 
   let current = 0;
   let playing = false;
@@ -486,19 +481,11 @@
 
       if (s.type === 'photo') {
         el.classList.add('slide-photo');
-        // Only inject layout if caption text is purposefully added manually later
+        // If an image fails to load (missing file), it gracefully displays an alternative placeholder
         el.innerHTML = `
-          <img src="${s.src}" alt="">
-          ${s.caption ? `<div class="caption"><h2>${s.caption}</h2>${s.subcaption ? `<p>${s.subcaption}</p>` : ''}</div>` : ''}
+          <img src="${s.src}" alt="" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'slide-placeholder\'><h3>Missing File</h3><p style=\'margin-top:10px;\'>Add your photo into your GitHub folder: <br><strong style=\'color:white;\'>${s.src}</strong></p></div>';">
+          ${s.caption ? `<div class="caption"><h2>${s.caption}</h2></div>` : ''}
         `;
-      } else if (s.type === 'placeholder') {
-        el.classList.add('slide-placeholder');
-        el.innerHTML = `
-          <div class="icon">⚜️</div>
-          <h3>${s.caption}</h3>
-          <p>${s.hint}</p>
-        `;
-        el.addEventListener('click', () => fileInputForSlot = i || null);
       } else if (s.type === 'end') {
         el.classList.add('slide-title');
         el.innerHTML = `
@@ -602,6 +589,7 @@
     }
   }
 
+  // Live dynamic local uploads (Temporary browser-session preview)
   stage.addEventListener('dragover', e => {
     e.preventDefault();
     dropZone.classList.add('visible');
@@ -628,16 +616,9 @@
 
     imgs.forEach((file) => {
       const url = URL.createObjectURL(file);
-      // Explicitly set caption to empty string to prevent filename display on screen
       const newSlide = { type: 'photo', src: url, caption: '' };
-
-      const firstPH = slides.findIndex(s => s.type === 'placeholder');
-      if (firstPH !== -1) {
-        slides.splice(firstPH, 1, newSlide);
-      } else {
-        const endI = slides.findIndex(s => s.type === 'end');
-        slides.splice(endI, 0, newSlide);
-      }
+      const endI = slides.findIndex(s => s.type === 'end');
+      slides.splice(endI, 0, newSlide);
     });
 
     buildSlides();
