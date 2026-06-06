@@ -123,34 +123,6 @@
       display: block;
     }
 
-    /* Caption overlay */
-    .caption {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(transparent, rgba(0,26,61,0.95) 50%);
-      width: 100%;
-      max-width: 900px;
-      padding: 50px 32px 20px;
-      text-align: center;
-      border-radius: 0 0 var(--slide-radius) var(--slide-radius);
-    }
-
-    .caption h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
-      letter-spacing: 0.06em;
-      color: var(--white);
-    }
-
-    .caption p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-top: 4px;
-      letter-spacing: 0.06em;
-    }
-
     /* Title / info slides */
     .slide-title {
       flex-direction: column;
@@ -192,35 +164,24 @@
       color: var(--white);
     }
 
-    /* Placeholder slide */
-    .slide-placeholder {
+    /* Status indicator */
+    .slide-status {
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
       text-align: center;
-      padding: 40px;
-      border: 2px dashed rgba(255,255,255,0.2);
-      margin: 40px;
-      border-radius: var(--slide-radius);
-      background: rgba(255,255,255,0.02);
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
 
-    .slide-placeholder .icon {
-      font-size: 4rem;
-      opacity: 0.7;
-    }
-
-    .slide-placeholder h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.8rem;
-      letter-spacing: 0.08em;
-      color: var(--white);
-    }
-
-    .slide-placeholder p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      max-width: 420px;
-      line-height: 1.6;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     /* ── Controls ────────────────────────────────── */
@@ -384,7 +345,6 @@
       border-color: var(--white);
     }
 
-    /* hidden file input */
     #fileInput { display: none; }
   </style>
 </head>
@@ -424,6 +384,11 @@
     </div>
   </div>
 
+  <div class="slide slide-status" id="loadingSlide">
+    <div class="spinner"></div>
+    <p style="letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.9rem; color: var(--muted);">Scanning your GitHub images folder...</p>
+  </div>
+
   <div class="drop-zone" id="dropZone">
     <div class="big-icon">📸</div>
     <h2>Drop Photos Here</h2>
@@ -443,18 +408,12 @@
 <input type="file" id="fileInput" accept="image/*" multiple>
 
 <script>
-  // ── GitHub Pages Image Configuration ─────────────────────────
-  // To use your own static images, create a folder named "images" 
-  // right next to this file in GitHub and match the filenames below.
-  const slides = [
-    { type: 'title' },
-    { type: 'photo', src: 'images/opening.jpg', caption: '' },
-    { type: 'photo', src: 'images/activities.jpg', caption: '' },
-    { type: 'photo', src: 'images/awards.jpg', caption: '' },
-    { type: 'photo', src: 'images/group.jpg', caption: '' },
-    { type: 'end' }
-  ];
-
+  // Configured directly to match your GitHub Repository setup!
+  const githubUser = "Darrenlatter";
+  const githubRepo = "AGM";
+  const imagesFolder = "images"; 
+  
+  let slides = [{ type: 'title' }];
   let current = 0;
   let playing = false;
   let timer = null;
@@ -467,6 +426,45 @@
   const btnPlay    = document.getElementById('btnPlay');
   const dropZone   = document.getElementById('dropZone');
   const fileInput  = document.getElementById('fileInput');
+
+  // Fetch dynamic randomly named contents layout directly from GitHub API
+  async function fetchImagesFromGitHub() {
+    const loadingSlide = document.getElementById('loadingSlide');
+    if (loadingSlide) loadingSlide.style.display = 'flex';
+
+    try {
+      const url = `https://api.github.com/repos/${githubUser}/${githubRepo}/contents/${imagesFolder}`;
+      const response = await fetch(url);
+      
+      if (!response.ok) throw new Error("Folder contents fetch request failed.");
+      
+      const files = await response.json();
+      
+      const validExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
+      const imageFiles = files.filter(file => {
+        if (file.type !== 'file') return false;
+        const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+        return validExtensions.includes(ext);
+      });
+
+      imageFiles.forEach(file => {
+        slides.push({ type: 'photo', src: file.download_url, caption: '' });
+      });
+
+    } catch (error) {
+      console.warn("API tracking error or running inside local file environment. Falling back to basics.", error);
+      // Fallback arrays
+      const defaults = ['opening.jpg', 'activities.jpg', 'awards.jpg', 'group.jpg'];
+      defaults.forEach(img => {
+        slides.push({ type: 'photo', src: `${imagesFolder}/${img}`, caption: '' });
+      });
+    }
+
+    slides.push({ type: 'end' });
+    
+    if (loadingSlide) loadingSlide.remove();
+    buildSlides();
+  }
 
   // ── Render slides ────────────────────────────────
   function buildSlides() {
@@ -481,10 +479,8 @@
 
       if (s.type === 'photo') {
         el.classList.add('slide-photo');
-        // If an image fails to load (missing file), it gracefully displays an alternative placeholder
         el.innerHTML = `
-          <img src="${s.src}" alt="" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'slide-placeholder\'><h3>Missing File</h3><p style=\'margin-top:10px;\'>Add your photo into your GitHub folder: <br><strong style=\'color:white;\'>${s.src}</strong></p></div>';">
-          ${s.caption ? `<div class="caption"><h2>${s.caption}</h2></div>` : ''}
+          <img src="${s.src}" alt="" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'slide-title\'><div class=\'detail\'>File Unreadable</div><p style=\'color:var(--muted); font-size:0.8rem; margin-top:10px;\'>${s.src.split('/').pop()}</p></div>';">
         `;
       } else if (s.type === 'end') {
         el.classList.add('slide-title');
@@ -502,6 +498,7 @@
 
     buildDots();
     updateCounter();
+    goTo(0);
   }
 
   function buildDots() {
@@ -518,6 +515,7 @@
     counter.textContent = `${current + 1} / ${slides.length}`;
   }
 
+  // Navigation Logic
   function goTo(idx) {
     if (idx < 0 || idx >= slides.length) return;
 
@@ -541,6 +539,7 @@
     goTo(next);
   }
 
+  // Progress Bar Configuration 
   function startProgress() {
     progressBar.style.transition = 'none';
     progressBar.style.width = '0%';
@@ -574,6 +573,7 @@
     }
   }
 
+  // Event Listeners for Keyboard Controls
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { changeSlide(1); }
     if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { changeSlide(-1); }
@@ -589,7 +589,7 @@
     }
   }
 
-  // Live dynamic local uploads (Temporary browser-session preview)
+  // Live context session local dragging interactions
   stage.addEventListener('dragover', e => {
     e.preventDefault();
     dropZone.classList.add('visible');
@@ -622,7 +622,6 @@
     });
 
     buildSlides();
-    goTo(current);
   }
 
   let touchStartX = 0;
@@ -632,8 +631,8 @@
     if (Math.abs(dx) > 40) changeSlide(dx < 0 ? 1 : -1);
   });
 
-  buildSlides();
-  goTo(0);
+  // Automatically execute scan tracking immediately on setup initialisation
+  fetchImagesFromGitHub();
 </script>
 </body>
 </html>
